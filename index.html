@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<script type="text/javascript" src="js/jquery-1.9.1.js"> </script>
+	<script type="text/javascript" src="js/bootstrap.js"> </script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+	<style>
+	body{
+		padding-top: 20px;
+		padding-bottom: 40px;
+	}
+	</style>
+	<script>
+		var values = {};
+		
+		function parsemyForm (e){
+			e.stopPropagation();
+			e.preventDefault();
+			var $inputs = $('#myForm :input');
+			$inputs.each(function() {
+				values[this.id] = $(this).val();
+			});
+			
+			console.log(values);
+			
+			//Default values
+			//TBA
+			
+			//Get values
+			var participants = parseInt(values['f_participants']);
+			var teams = parseInt(values['f_teams']);
+			var t_each = parseFloat(values['f_timepergame']);
+			var t_total = parseFloat(values['f_totaltime']);
+			var t_between = parseFloat(values['f_timebetween']);
+			
+			//Calculated values
+			var team_each = participants/teams;
+			var games_played;
+			var games_per_team;
+			var excess_time;
+			
+			//Calulator
+			var time_game = t_each + t_between;
+			games_played = Math.floor(t_total/time_game);
+			games_per_team = (games_played*2)/teams;
+			excess_time = t_total - (games_played * time_game);
+			
+			//Show values
+			$("#f_perteam").text(team_each);
+			$("#f_totalgames").text(games_played);
+			$("#f_games").text(games_per_team);
+			$("#f_excesstime").text(excess_time);
+		}
+		
+		$(document).ready(function (){
+			document.getElementById("f_submit").addEventListener('click', parsemyForm, false);
+			var $inputs = $('#myForm :input');
+			$inputs.each(function() {
+				this.addEventListener('change', parsemyForm, false);
+			});
+		})
+	</script>
+</head>
+<body>
+
+	<div class=row>
+	<form class="form-horizontal" id=myForm>
+		<div class=span6>
+			<div class="control-group">
+				<label class="control-label" for="f_participants">Total participants</label>
+				<div class="controls">
+					<input type=text id="f_participants" placeholder="Total participants" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_teams">Number of teams</label>
+				<div class="controls">
+					<input type=text id="f_teams" placeholder="Numbder of teams" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_perteam">People per team</label>
+				<div class="controls">
+					<span id="f_perteam">0</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_totalgames">Number of games played</label>
+				<div class="controls">
+					<span id="f_totalgames">0</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_games">Number of games played (per team)</label>
+				<div class="controls">
+					<span id="f_games">0</span>
+				</div>
+			</div>
+		</div>
+		<div class=span6>
+			<div class="control-group">
+				<label class="control-label" for="f_timepergame">Time per game (minutes)</label>
+				<div class="controls">
+					<input type=text id="f_timepergame" placeholder="Time per game (min)" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_totaltime">Total time allocated (minutes)</label>
+				<div class="controls">
+					<input type=text id="f_totaltime" placeholder="Total time allocated (min)" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_timebetween">Time between games (minutes)</label>
+				<div class="controls">
+					<input type=text id="f_timebetween" placeholder="Time between games (min)" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="f_excesstime">Excess time (minutes)</label>
+				<div class="controls">
+					<span id="f_excesstime">0</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class=row>
+		<div class=span12>
+			<div class="pagination-right">
+				<button type="submit" id="f_submit" class="btn">Refresh</button>
+			</div>
+		</div>
+	</div>
+	</form>
+</body>
+</html>
