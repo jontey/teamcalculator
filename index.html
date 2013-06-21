@@ -2,12 +2,28 @@
 <html lang=en>
 <head>
 	<script type="text/javascript" src="js/jquery-1.9.1.js"> </script>
+	<script type="text/javascript" src="js/jquery-ui-1.10.3.custom.js"> </script>
+	<script type="text/javascript" src="js/jquery.ui.touch-punch.js"> </script>
 	<script type="text/javascript" src="js/bootstrap.js"> </script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 	<style>
 	body{
 		padding-top: 20px;
 		padding-bottom: 40px;
+	}
+	#cardSlots div, .cardPile div {
+	  float: left;
+	  width: 58px;
+	  height: 30px;
+	  padding: 10px;
+	  padding-top: 10px;
+	  padding-bottom: 0;
+	  border: 2px solid #333;
+	  -moz-border-radius: 10px;
+	  -webkit-border-radius: 10px;
+	  border-radius: 10px;
+	  margin: 0 0 0 10px;
+	  background: #fff;
 	}
 	</style>
 	<script>
@@ -53,7 +69,7 @@
 		}
 		
 		$(document).ready(function (){
-			document.getElementById("f_submit").addEventListener('click', parsemyForm, false);
+			//document.getElementById("f_submit").addEventListener('click', parsemyForm, false);
 			var $inputs = $('#myForm :input');
 			$inputs.each(function() {
 				this.addEventListener('change', parsemyForm, false);
@@ -125,5 +141,74 @@
 		</div>
 	</div>
 	</form>
+	<div class="teamchart">
+		<div id="cardSlots">
+			<div data="1" class="team">
+				Team 1
+			</div>
+			<div data="2" class="team">
+				Team 2
+			</div>
+		</div>
+	</div>
+	<br/>
+	<div class="gamechart">
+		<div id="game1" class="cardPile">
+			<div class="team">
+				Fill Me
+			</div>
+			<div class="team">
+				Fille Me
+			</div>
+		</div>
+	</div>
+	<script>
+		$("#cardSlots .team").draggable({
+			containment: 'body',
+			//stack: '#teamchart div',
+			cursor: 'move',
+			revert: true
+		});
+		$(".cardPile .team").droppable({
+			accept: '#cardSlots div',
+			hoverClass: 'hovered',
+			drop: handleCardDrop
+		});
+		
+		function handleCardDrop( event, ui ) {
+		  var slotNumber = $(this).data( 'number' );
+		  //var cardNumber = ui.draggable.data( 'number' );
+		 
+		  // If the card was dropped to the correct slot,
+		  // change the card colour, position it directly
+		  // on top of the slot, and prevent it being dragged
+		  // again
+		 
+		  //if ( slotNumber == cardNumber ) {
+			ui.draggable.addClass( 'correct' );
+			//ui.draggable.draggable( 'disable' );
+			//$(this).droppable( 'disable' );
+			ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+			ui.draggable.draggable( 'option', 'revert', false );
+			//correctCards++;
+		 // } 
+		   
+		  // If all the cards have been placed correctly then display a message
+		  // and reset the cards for another go
+		 
+		  /* if ( correctCards == 10 ) {
+			$('#successMessage').show();
+			$('#successMessage').animate( {
+			  left: '380px',
+			  top: '200px',
+			  width: '400px',
+			  height: '100px',
+			  opacity: 1
+			} );
+		  }*/
+		 
+		}
+	</script>
+	
 </body>
 </html>
